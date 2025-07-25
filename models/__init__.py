@@ -4,3 +4,4 @@ class Base(DeclarativeBase):
     pass
 
 from .steamapp import SteamApp
+from .user import User
