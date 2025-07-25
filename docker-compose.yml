@@ -18,6 +18,8 @@ services:
       POSTGRES_DB: steamapp
     volumes:
       - ../db_data:/var/lib/postgresql/data:rw
+    ports:
+      - "8000:5432"
 
 volumes:
   db_data:
