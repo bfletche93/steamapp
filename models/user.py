@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 user_owns_steam_app_m2m = db.Table(
     "user_owns_steam_app_m2m",
     Column("user_id", ForeignKey("user.user_id"), primary_key=True),
-    Column("app_id", ForeignKey("steam_app.app_id"), primary_key=True)
+    Column("appid", ForeignKey("steam_app.appid"), primary_key=True)
 )
 
 class User(Base):
@@ -27,7 +27,7 @@ class User(Base):
 class UserAchievementAssociation(Base):
     __tablename__ = "user_achievement_association"
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.user_id"), primary_key=True)
-    app_id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    appid: Mapped[int] = mapped_column(Integer, primary_key=True)
     api_name: Mapped[str] = mapped_column(String(50), primary_key=True)
 
     achieved: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -38,7 +38,7 @@ class UserAchievementAssociation(Base):
 
     __table_args__ = (
         ForeignKeyConstraint(
-            ["app_id", "api_name"],
-            ["achievement.app_id", "achievement.api_name"]
+            ["appid", "api_name"],
+            ["achievement.appid", "achievement.api_name"]
         ),
     )

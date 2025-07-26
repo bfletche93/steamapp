@@ -5,5 +5,5 @@ class Base(DeclarativeBase):
 
 from .languages import Language
 from .steamapp import SteamApp
-from .achievements import Achievement
+from .achievements import Achievement, LocalizedAchievement
 from .user import User

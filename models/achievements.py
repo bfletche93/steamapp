@@ -7,7 +7,7 @@ from . import Base
 class Achievement(Base):
     __tablename__ = "achievement"
     api_name: Mapped[str] = mapped_column(String(50), primary_key=True)
-    app_id: Mapped[int] = mapped_column(Integer, ForeignKey("steam_app.app_id"), primary_key=True)
+    appid: Mapped[int] = mapped_column(Integer, ForeignKey("steam_app.appid"), primary_key=True)
     percent: Mapped[float] = mapped_column(Float)
     type: Mapped[str] = mapped_column(String)
 
@@ -20,7 +20,7 @@ class Achievement(Base):
 class LocalizedAchievement(Achievement):
     __tablename__ = "localized_achievement"
     api_name: Mapped[str] = mapped_column(String(50), primary_key=True)
-    app_id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    appid: Mapped[int] = mapped_column(Integer, primary_key=True)
     language_id: Mapped[str] = mapped_column(String(2),
                                              ForeignKey("language.web_api_language_code"),
                                              primary_key=True)
@@ -32,7 +32,7 @@ class LocalizedAchievement(Achievement):
     }
     __table_args__ = (
         ForeignKeyConstraint(
-            ["api_name", "app_id"],
-            ["achievement.api_name", "achievement.app_id"]
+            ["api_name", "appid"],
+            ["achievement.api_name", "achievement.appid"]
         ),
     )

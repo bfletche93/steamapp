@@ -1,6 +1,8 @@
 services:
   app:
     image: steamapp:dev
+    depends_on:
+      - db
   db:
     image: postgres
     restart: always

@@ -1,23 +1,27 @@
 from sqlalchemy import Boolean, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from typing import List
+from typing import List, Optional, TYPE_CHECKING
 
 from . import Base
-from .user import User, user_owns_steam_app_m2m
+from .user import user_owns_steam_app_m2m
+
+if TYPE_CHECKING:
+    from . import User
 
 class SteamApp(Base):
     __tablename__ = "steam_app"
-    app_id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    type: Mapped[str] = mapped_column(String(100))
-    required_age: Mapped[int] = mapped_column(Integer)
-    is_free: Mapped[bool] = mapped_column(Boolean)
-    supported_languages: Mapped[str] = mapped_column(Text)
+    appid: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(Text)
+    type: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    required_age: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    is_free: Mapped[Optional[bool]] = mapped_column(Boolean, nullable=True)
+    supported_languages: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
-    positive_reviews: Mapped[int] = mapped_column(Integer)
-    negative_reviews: Mapped[int] = mapped_column(Integer)
+    positive_reviews: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    negative_reviews: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
-    base_game: Mapped[int] = mapped_column(Integer, ForeignKey("steam_app.app_id"))
+    base_game: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("steam_app.appid"), nullable=True)
 
     dlc: Mapped[List["SteamApp"]] = relationship("SteamApp")
-    owners: Mapped[List[User]] = relationship(secondary=user_owns_steam_app_m2m)
+    owners: Mapped[List["User"]] = relationship(secondary=user_owns_steam_app_m2m)
