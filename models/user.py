@@ -1,4 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import (Boolean, Column, ForeignKey, ForeignKeyConstraint,
+                        Integer, String)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from typing import List, TYPE_CHECKING
@@ -8,7 +9,7 @@ from app import db
 from . import Base
 
 if TYPE_CHECKING:
-    from .steamapp import SteamApp
+    from . import Achievement, SteamApp
 
 user_owns_steam_app_m2m = db.Table(
     "user_owns_steam_app_m2m",
@@ -22,3 +23,22 @@ class User(Base):
     persona_name: Mapped[str] = mapped_column(String(50))
 
     owned_games: Mapped[List["SteamApp"]] = relationship(secondary=user_owns_steam_app_m2m)
+
+class UserAchievementAssociation(Base):
+    __tablename__ = "user_achievement_association"
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.user_id"), primary_key=True)
+    app_id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    api_name: Mapped[str] = mapped_column(String(50), primary_key=True)
+
+    achieved: Mapped[bool] = mapped_column(Boolean, default=False)
+    unlock_time: Mapped[int] = mapped_column(Integer)
+
+    user: Mapped["User"] = relationship()
+    achievement: Mapped["Achievement"] = relationship()
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["app_id", "api_name"],
+            ["achievement.app_id", "achievement.api_name"]
+        ),
+    )
